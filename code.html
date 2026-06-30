@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AuraAnalyze | Cyber-Minimalist AI Resume Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.4); }
+        }
+        .animate-pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
+        
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .scan-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c0c1ff, transparent);
+            width: 100%;
+            position: absolute;
+            top: 0;
+            z-index: 10;
+            display: none;
+        }
+
+        @keyframes scanning {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(280px); opacity: 0; }
+        }
+
+        .scanning-active .scan-line {
+            display: block;
+            animation: scanning 2.5s linear infinite;
+        }
+
+        .circular-progress {
+            background: conic-gradient(#c0c1ff 316.8deg, #1c1f2a 0deg);
+        }
+    </style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container-highest": "#313540",
+                "deep-well": "#020617",
+                "surface-bright": "#353944",
+                "tertiary-container": "#00885d",
+                "on-secondary": "#3c0091",
+                "on-secondary-fixed-variant": "#5516be",
+                "on-surface": "#dfe2f1",
+                "on-background": "#dfe2f1",
+                "tertiary-fixed-dim": "#4edea3",
+                "surface-container": "#1c1f2a",
+                "surface-container-lowest": "#0a0e18",
+                "on-secondary-container": "#c4abff",
+                "on-primary-container": "#0d0096",
+                "inverse-primary": "#494bd6",
+                "glass-stroke": "rgba(255, 255, 255, 0.08)",
+                "primary-container": "#8083ff",
+                "tertiary": "#4edea3",
+                "on-tertiary": "#003824",
+                "primary": "#c0c1ff",
+                "surface": "#0f131d",
+                "inverse-surface": "#dfe2f1",
+                "primary-fixed-dim": "#c0c1ff",
+                "secondary-fixed": "#e9ddff",
+                "surface-slate": "#0F172A",
+                "secondary-container": "#571bc1",
+                "on-tertiary-container": "#000703",
+                "surface-dim": "#0f131d",
+                "surface-tint": "#c0c1ff",
+                "on-tertiary-fixed": "#002113",
+                "secondary-fixed-dim": "#d0bcff",
+                "border-muted": "rgba(31, 41, 55, 0.5)",
+                "background": "#0f131d",
+                "on-error-container": "#ffdad6",
+                "inverse-on-surface": "#2c303b",
+                "surface-container-high": "#262a35",
+                "on-primary": "#1000a9",
+                "error": "#ffb4ab",
+                "on-tertiary-fixed-variant": "#005236",
+                "on-primary-fixed-variant": "#2f2ebe",
+                "primary-fixed": "#e1e0ff",
+                "secondary": "#d0bcff",
+                "error-container": "#93000a",
+                "outline-variant": "#464554",
+                "surface-variant": "#313540",
+                "outline": "#908fa0",
+                "on-secondary-fixed": "#23005c",
+                "on-primary-fixed": "#07006c",
+                "surface-container-low": "#171b26",
+                "on-surface-variant": "#c7c4d7",
+                "on-error": "#690005",
+                "tertiary-fixed": "#6ffbbe"
+        },
+        "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "card-padding": "32px",
+                "container-max": "1200px",
+                "section-gap": "64px",
+                "stack-sm": "8px",
+                "gutter": "24px",
+                "stack-md": "16px"
+        },
+        "fontFamily": {
+                "body-md": [
+                        "Plus Jakarta Sans"
+                ],
+                "headline-md": [
+                        "Outfit"
+                ],
+                "label-bold": [
+                        "Plus Jakarta Sans"
+                ],
+                "headline-lg": [
+                        "Outfit"
+                ],
+                "display-xl-mobile": [
+                        "Outfit"
+                ],
+                "display-xl": [
+                        "Outfit"
+                ],
+                "body-lg": [
+                        "Plus Jakarta Sans"
+                ]
+        },
+        "fontSize": {
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-bold": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-xl-mobile": [
+                        "36px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "display-xl": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "800"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.7",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<nav class="flex justify-between items-center px-gutter py-4 w-full sticky top-0 z-50 bg-surface/80 backdrop-blur-xl border-b border-glass-stroke shadow-indigo-500/5">
+<div class="flex items-center gap-8">
+<span class="font-headline-md text-headline-md font-bold text-primary tracking-tighter">AuraAnalyze</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Dashboard</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">History</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200 font-body-md text-body-md" href="#">Benchmarks</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<button class="hidden md:block px-4 py-2 bg-primary-container text-on-primary-container rounded-full font-label-bold text-label-bold hover:scale-105 transition-transform">New Scan</button>
+<div class="w-10 h-10 rounded-full border border-glass-stroke bg-cover bg-center" data-alt="A professional headshot of a diverse young tech executive with a confident smile, set against a blurred futuristic office background with soft indigo lighting and subtle glass textures." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCy0sgarwKeVB4AOpDz50TJmPAddZswo9f9q7zMpuNEG33dQRd1veY9XUses8k2gbFMILKzk7MUF1ZNlMuuncCSvONwa_cw5cOzc1KgvDQ8q9WAqcoaeYJYTZwFGtcj6zu253PItqI24hDfZz4xBHC-kz67I8MhaEXXxPlfsSmn_sJkKbFKiYToz-Iw1uxH08rfTyQYugn3LOrgzA1t3qdfZlzYI_nphM77oB0a2TCMvI3EuJgxCPfj_Q')"></div>
+</div>
+</nav>
+<!-- Background Shader -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+
+</div>
+<main class="max-w-container-max mx-auto px-gutter pb-section-gap pt-12">
+<!-- Hero Input Zone -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-stack-md items-stretch mb-section-gap">
+<!-- Upload Area -->
+<div class="glass-panel p-card-padding rounded-lg flex flex-col items-center justify-center text-center group cursor-pointer relative overflow-hidden transition-all duration-300 hover:border-primary/50 animate-pulse-glow" id="upload-zone">
+<input type="file" id="resume-input" accept=".pdf,.docx,.txt" class="hidden" />
+<div class="scan-line"></div>
+<div class="mb-6 w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 text-primary transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">upload_file</span>
+</div>
+<h2 class="font-headline-md text-headline-md mb-2" id="upload-title">Drag &amp; Drop Resume</h2>
+<p class="text-on-surface-variant text-body-md mb-6 max-w-xs" id="upload-subtitle">PDF, DOCX, TXT supported. Our AI will instantly map your career trajectory.</p>
+<div class="flex gap-2" id="upload-badges">
+<span class="px-3 py-1 rounded-full bg-surface-container-high border border-glass-stroke text-label-bold font-label-bold">ATS OPTIMIZED</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high border border-glass-stroke text-label-bold font-label-bold">ENCRYPTION ACTIVE</span>
+</div>
+</div>
+<!-- Target Context Area -->
+<div class="glass-panel p-card-padding rounded-lg flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">target</span>
+                        Target Context
+                    </h3>
+<span class="text-label-bold font-label-bold text-on-surface-variant uppercase tracking-widest">Job Description</span>
+</div>
+<textarea id="job-description" class="flex-grow w-full bg-surface-container-lowest/50 border border-glass-stroke rounded-lg p-4 font-body-md text-on-surface focus:outline-none focus:border-primary transition-colors resize-none placeholder:text-on-surface-variant/40" placeholder="Paste the job description you are targeting here..."></textarea>
+<button class="mt-stack-md w-full py-4 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-headline-md font-bold shadow-indigo-500/20 hover:shadow-indigo-500/40 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3" id="analyze-trigger">
+<span class="material-symbols-outlined">psychology</span>
+                    Start Deep Analysis
+                </button>
+</div>
+</section>
+<!-- Results Dashboard (Initially Hidden or Subtle) -->
+<div class="hidden opacity-0 transition-opacity duration-1000" id="results-dashboard">
+<header class="flex flex-col md:flex-row md:items-end justify-between mb-8 border-l-4 border-primary pl-6 py-2">
+<div>
+<h2 class="font-display-xl text-display-xl leading-none">Analysis Report</h2>
+<p id="report-context" class="text-on-surface-variant mt-2 font-body-lg">Generated based on analysis context</p>
+</div>
+<div class="flex items-center gap-3 mt-4 md:mt-0">
+<span class="flex h-3 w-3 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+</span>
+<span class="text-label-bold font-label-bold text-tertiary uppercase tracking-widest">Real-time Intelligence Ready</span>
+</div>
+</header>
+<!-- 4-Column Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- ATS Score -->
+<div class="glass-panel p-card-padding rounded-lg flex flex-col items-center justify-center text-center aspect-square">
+<div class="relative w-40 h-40 flex items-center justify-center mb-6">
+<div id="circular-progress" class="absolute inset-0 rounded-full circular-progress"></div>
+<div class="absolute inset-2 rounded-full bg-surface-container flex flex-col items-center justify-center">
+<span id="ats-score" class="font-display-xl text-display-xl text-primary leading-none">0</span>
+<span class="text-label-bold font-label-bold text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md mb-1">ATS Fit Score</h3>
+<p class="text-body-md text-on-surface-variant">Optimized for Tier 1 screening</p>
+</div>
+<!-- Target Roles -->
+<div class="glass-panel p-card-padding rounded-lg flex flex-col">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">work</span>
+<h3 class="font-headline-md text-headline-md">Target Roles</h3>
+</div>
+<div id="target-roles" class="space-y-stack-md">
+<div class="p-4 rounded-lg bg-surface-container-high border-l-2 border-primary">
+<div class="font-label-bold text-primary mb-1">94% MATCH</div>
+<div class="font-headline-md text-lg">Senior ML Engineer</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border-l-2 border-on-surface-variant/30">
+<div class="font-label-bold text-on-surface-variant mb-1">82% MATCH</div>
+<div class="font-headline-md text-lg">Data Architect</div>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border-l-2 border-on-surface-variant/30">
+<div class="font-label-bold text-on-surface-variant mb-1">75% MATCH</div>
+<div class="font-headline-md text-lg">Product Lead (AI)</div>
+</div>
+</div>
+</div>
+<!-- Skills Gap & Roadmap (Spans 2 columns) -->
+<div class="lg:col-span-2 glass-panel p-card-padding rounded-lg flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="font-headline-md text-headline-md">Skills Intelligence</h3>
+</div>
+<div class="flex gap-2">
+<span id="weakness-count-badge" class="px-3 py-1 rounded bg-tertiary/10 text-tertiary text-label-bold font-label-bold">0 WEAKNESSES</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Tag Cloud -->
+<div>
+<p class="text-label-bold font-label-bold text-on-surface-variant mb-4 uppercase">Missing Keywords</p>
+<div id="missing-keywords" class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md">Kubernetes</span>
+<span class="px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md">PyTorch Forecasting</span>
+<span class="px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md">LLM Guardrails</span>
+<span class="px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md">CI/CD Pipeline</span>
+<span class="px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md">Azure OpenAI</span>
+</div>
+</div>
+<!-- 4-Week Roadmap -->
+<div class="relative">
+<p class="text-label-bold font-label-bold text-on-surface-variant mb-4 uppercase">4-Week Bridging Roadmap</p>
+<div id="roadmap-timeline" class="space-y-4 relative">
+<div class="absolute left-[7px] top-2 bottom-2 w-[2px] bg-primary/20"></div>
+<div class="flex gap-4 relative">
+<div class="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20 shrink-0 mt-1"></div>
+<div>
+<p class="font-label-bold text-primary">WEEK 1</p>
+<p class="text-body-md">Certify: K8s Fundamentals</p>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="w-4 h-4 rounded-full bg-primary/40 shrink-0 mt-1"></div>
+<div>
+<p class="font-label-bold text-on-surface-variant">WEEK 2-3</p>
+<p class="text-body-md">Implement LLM Guardrails Project</p>
+</div>
+</div>
+<div class="flex gap-4 relative">
+<div class="w-4 h-4 rounded-full bg-primary/40 shrink-0 mt-1"></div>
+<div>
+<p class="font-label-bold text-on-surface-variant">WEEK 4</p>
+<p class="text-body-md">Resume Polish &amp; Application</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Certifications Section (Integrated below) -->
+<div class="mt-gutter grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="glass-panel p-card-padding rounded-lg md:col-span-2">
+<h3 class="font-headline-md text-headline-md mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">workspace_premium</span>
+                        Suggested Credentials
+                    </h3>
+<div id="suggested-credentials" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="p-6 rounded-lg bg-surface-container-lowest border border-glass-stroke group hover:border-primary transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">cloud</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-lg mb-2">AWS Certified ML Specialty</h4>
+<p class="text-on-surface-variant text-body-md">Required for 78% of your target JD matches.</p>
+</div>
+<div class="p-6 rounded-lg bg-surface-container-lowest border border-glass-stroke group hover:border-primary transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">code</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-lg mb-2">Advanced PyTorch Architect</h4>
+<p class="text-on-surface-variant text-body-md">Gap identified in modern deep learning frameworks.</p>
+</div>
+</div>
+</div>
+<!-- Bento Style Insight -->
+<div class="glass-panel p-card-padding rounded-lg bg-gradient-to-br from-primary/10 to-transparent flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md mb-4">AI Proverb</h3>
+<p class="italic text-body-lg text-primary">"Your experience is the hardware, but your resume is the software. Optimize the API for recruiters."</p>
+</div>
+<div class="pt-8">
+<button class="w-full py-3 border border-primary text-primary rounded-full font-label-bold text-label-bold hover:bg-primary hover:text-on-primary transition-all">
+                            EXPORT PDF REPORT
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="flex flex-col md:flex-row justify-between items-center px-gutter py-section-gap w-full mt-auto bg-surface-container-lowest border-t border-glass-stroke">
+<div class="mb-4 md:mb-0">
+<span class="font-headline-md text-headline-md text-primary font-bold">AuraAnalyze</span>
+<p class="text-on-surface-variant text-body-md mt-2">© 2024 AuraAnalyze AI. Cyber-Minimalist Precision.</p>
+</div>
+<div class="flex gap-8 text-body-md">
+<a class="text-on-surface-variant hover:text-tertiary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-tertiary transition-colors" href="#">API Status</a>
+</div>
+</footer>
+<script>
+        const uploadZone = document.getElementById('upload-zone');
+        const resumeInput = document.getElementById('resume-input');
+        const uploadTitle = document.getElementById('upload-title');
+        const uploadSubtitle = document.getElementById('upload-subtitle');
+        const analyzeTrigger = document.getElementById('analyze-trigger');
+        const jobDescriptionInput = document.getElementById('job-description');
+        const resultsDashboard = document.getElementById('results-dashboard');
+        
+        let selectedFile = null;
+
+        // Click on upload zone to open file dialog
+        uploadZone.addEventListener('click', (e) => {
+            if (e.target !== resumeInput) {
+                resumeInput.click();
+            }
+        });
+
+        // File selection handler
+        resumeInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        // Hover effect for upload zone
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('border-primary', 'bg-primary/5');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('border-primary', 'bg-primary/5');
+        });
+
+        // Drop handler
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('border-primary', 'bg-primary/5');
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelect(e.dataTransfer.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            selectedFile = file;
+            uploadTitle.innerText = "File Selected";
+            uploadSubtitle.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            uploadSubtitle.classList.remove('text-red-400');
+            uploadSubtitle.classList.add('text-primary', 'font-semibold');
+        }
+
+        // Send API request and populate UI
+        analyzeTrigger.addEventListener('click', async () => {
+            if (!selectedFile) {
+                uploadSubtitle.innerText = "Please select a resume file first (PDF, DOCX, or TXT).";
+                uploadSubtitle.classList.add('text-red-400');
+                return;
+            }
+
+            // Start animation
+            uploadZone.classList.add('scanning-active');
+            analyzeTrigger.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Running Analysis...';
+            analyzeTrigger.disabled = true;
+
+            const formData = new FormData();
+            formData.append('resume_file', selectedFile);
+            const jdText = jobDescriptionInput.value.trim();
+            if (jdText) {
+                formData.append('job_description', jdText);
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server returned status ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (!data.success) {
+                    throw new Error(data.error || 'Unknown analysis error');
+                }
+
+                // Render dynamic results
+                renderResults(data);
+                
+                // Show dashboard
+                resultsDashboard.classList.remove('hidden');
+                setTimeout(() => {
+                    resultsDashboard.classList.remove('opacity-0');
+                    resultsDashboard.classList.add('opacity-100');
+                    resultsDashboard.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Highlight effect
+                    resultsDashboard.classList.add('ring-2', 'ring-primary/20', 'rounded-xl');
+                    setTimeout(() => resultsDashboard.classList.remove('ring-2', 'ring-primary/20'), 2000);
+                }, 50);
+
+                analyzeTrigger.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Analysis Complete';
+
+            } catch (error) {
+                console.error(error);
+                uploadSubtitle.innerText = `Analysis failed: ${error.message}. Is backend running on port 8000?`;
+                uploadSubtitle.classList.add('text-red-400');
+                uploadSubtitle.classList.remove('text-primary');
+                analyzeTrigger.innerHTML = '<span class="material-symbols-outlined">error</span> Analysis Failed';
+            } finally {
+                uploadZone.classList.remove('scanning-active');
+                analyzeTrigger.disabled = false;
+                setTimeout(() => {
+                    if (analyzeTrigger.innerHTML.includes('check_circle') || analyzeTrigger.innerHTML.includes('error')) {
+                        analyzeTrigger.innerHTML = '<span class="material-symbols-outlined">psychology</span> Start Deep Analysis';
+                    }
+                }, 5000);
+            }
+        });
+
+        function renderResults(data) {
+            const parser = data.parsed_resume || {};
+            const predictor = data.predicted_roles || { predictions: [] };
+            const gaps = data.skill_gaps || { missing_skills: [], weak_skills: [], strong_skills: [] };
+            const certs = data.certifications || { recommendations: [] };
+            const ats = data.ats_report || { ats_score: 0, matched_keywords: [], missing_keywords: [], suggestions: [] };
+
+            // 1. Report Context
+            const topRole = predictor.predictions[0]?.role_name || "Target Role";
+            document.getElementById('report-context').innerText = `Generated based on profile for ${parser.name || 'Candidate'} matching ${topRole}`;
+
+            // 2. ATS Score & Circular Progress
+            const score = ats.ats_score || 0;
+            document.getElementById('ats-score').innerText = score;
+            const progressCircle = document.getElementById('circular-progress');
+            const deg = (score / 100) * 360;
+            progressCircle.style.background = `conic-gradient(#c0c1ff ${deg}deg, #1c1f2a 0deg)`;
+
+            // 3. Target Roles List
+            const rolesContainer = document.getElementById('target-roles');
+            rolesContainer.innerHTML = '';
+            
+            if (predictor.predictions && predictor.predictions.length > 0) {
+                predictor.predictions.forEach((pred, index) => {
+                    const isTop = index === 0;
+                    const borderClass = isTop ? 'border-primary' : 'border-on-surface-variant/30';
+                    const textClass = isTop ? 'text-primary' : 'text-on-surface-variant';
+                    
+                    const roleDiv = document.createElement('div');
+                    roleDiv.className = `p-4 rounded-lg bg-surface-container-high border-l-2 ${borderClass}`;
+                    roleDiv.innerHTML = `
+                        <div class="font-label-bold ${textClass} mb-1">${pred.match_percentage}% MATCH</div>
+                        <div class="font-headline-md text-lg">${pred.role_name}</div>
+                    `;
+                    rolesContainer.appendChild(roleDiv);
+                });
+            } else {
+                rolesContainer.innerHTML = '<p class="text-on-surface-variant text-body-md">No roles predicted</p>';
+            }
+
+            // 4. Skills Intelligence Badge & Tags
+            const totalWeaknesses = (gaps.missing_skills?.length || 0) + (gaps.weak_skills?.length || 0);
+            document.getElementById('weakness-count-badge').innerText = `${totalWeaknesses} WEAKNESSES`;
+
+            const missingContainer = document.getElementById('missing-keywords');
+            missingContainer.innerHTML = '';
+            
+            const allMissing = [...(gaps.missing_skills || []), ...(gaps.weak_skills || [])];
+            if (allMissing.length > 0) {
+                allMissing.forEach(skill => {
+                    const tag = document.createElement('span');
+                    tag.className = 'px-3 py-1 rounded-full bg-slate-950/50 border border-error/30 text-on-surface font-body-md';
+                    tag.innerText = skill;
+                    missingContainer.appendChild(tag);
+                });
+            } else {
+                missingContainer.innerHTML = '<span class="text-on-surface-variant text-body-md">No significant missing keywords</span>';
+            }
+
+            // 5. 4-Week Roadmap Timeline
+            const roadmapContainer = document.getElementById('roadmap-timeline');
+            roadmapContainer.innerHTML = '<div class="absolute left-[7px] top-2 bottom-2 w-[2px] bg-primary/20"></div>';
+
+            if (gaps.improvement_plan) {
+                const planLines = gaps.improvement_plan.split('\n');
+                planLines.forEach((line, index) => {
+                    if (!line.trim()) return;
+                    
+                    let weekLabel = `STEP ${index + 1}`;
+                    let description = line;
+                    
+                    const splitIdx = line.indexOf(':');
+                    if (splitIdx !== -1) {
+                        weekLabel = line.substring(0, splitIdx).toUpperCase();
+                        description = line.substring(splitIdx + 1).trim();
+                    }
+                    
+                    const stepDiv = document.createElement('div');
+                    stepDiv.className = 'flex gap-4 relative';
+                    
+                    const bulletOpacity = index === 0 ? '' : '/40';
+                    const textLabelColor = index === 0 ? 'text-primary' : 'text-on-surface-variant';
+                    const ringClass = index === 0 ? 'ring-4 ring-primary/20' : '';
+                    
+                    stepDiv.innerHTML = `
+                        <div class="w-4 h-4 rounded-full bg-primary${bulletOpacity} ${ringClass} shrink-0 mt-1"></div>
+                        <div>
+                            <p class="font-label-bold ${textLabelColor}">${weekLabel}</p>
+                            <p class="text-body-md">${description}</p>
+                        </div>
+                    `;
+                    roadmapContainer.appendChild(stepDiv);
+                });
+            } else {
+                roadmapContainer.innerHTML = '<p class="text-on-surface-variant text-body-md">No roadmap generated</p>';
+            }
+
+            // 6. Suggested Credentials
+            const credentialsContainer = document.getElementById('suggested-credentials');
+            credentialsContainer.innerHTML = '';
+            
+            const recs = certs.recommendations || [];
+            if (recs.length > 0) {
+                recs.forEach(rec => {
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'p-6 rounded-lg bg-surface-container-lowest border border-glass-stroke group hover:border-primary transition-colors cursor-pointer';
+                    
+                    let icon = 'school';
+                    if (rec.platform?.toLowerCase() === 'coursera') icon = 'cloud';
+                    else if (rec.platform?.toLowerCase() === 'udemy') icon = 'code';
+                    
+                    cardDiv.innerHTML = `
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="w-12 h-12 bg-primary/5 rounded-lg flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">${icon}</span>
+                            </div>
+                            <a href="${rec.url}" target="_blank" class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">open_in_new</a>
+                        </div>
+                        <h4 class="font-headline-md text-lg mb-2">${rec.title}</h4>
+                        <p class="text-on-surface-variant text-body-md">${rec.platform} • Est. ${rec.duration_estimate}</p>
+                    `;
+                    
+                    cardDiv.addEventListener('click', () => {
+                        window.open(rec.url, '_blank');
+                    });
+                    
+                    credentialsContainer.appendChild(cardDiv);
+                });
+            } else {
+                credentialsContainer.innerHTML = '<p class="text-on-surface-variant text-body-md col-span-2 text-center p-4">No credential recommendations available</p>';
+            }
+        }
+    </script>
+</body></html>
